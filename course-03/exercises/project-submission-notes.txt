@@ -5,17 +5,47 @@ SUBMISSION NOTES:
 ==================================================
 CI/CD, Github & Code Quality
 ==================================================
+
+Github -
 - Forked and merged https://github.com/scheeles/cloud-developer/tree/06-ci/course-03 -> https://github.com/ulhaspai/cloud-developer/course-03 so that I can work on my private repo
+
+CI/CD
 - Integrated Travis CI with my private github repo ulhapais/cloud-developer
 - Ran a manual Travis build to ensure build works
+- Travis CI runs a build and installs the docker compose images on each build
 
+Code Quality -
 - Added relevant README files to each project.
-Start here: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises
-Also see:
-- https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-restapi-feed
-- https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-restapi-user
-- https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-frontend
+- Start here: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises
+- Also see:
+    - Feed: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-restapi-feed
+    - User: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-restapi-user
+    - Frontend: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-frontend
+    - Deployment: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-deployment
+
+
+==================================================
+Container
+==================================================
+- Each module user, feed and frontend has a Dockerfile that indicates how that module should be built
+- The docker images are published to the public docker hub :
+- You are free to download and install these images to test that they run correctly.
+- See the documentation on how to configure your environment variables to get the entire application running correctly
+- Screenshots of running docker containers added screenshots/docker folder in the github repo
+
+* TODO: To run the containers from the docker hub follow the following steps:
 -
+-
+
+
+
+==================================================
+Deployment
+==================================================
+
+- Kubernetes cluster set up is described in the github repo: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-deployment/k8s
+
+
 
 
 
