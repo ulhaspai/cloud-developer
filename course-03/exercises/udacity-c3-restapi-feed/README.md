@@ -54,3 +54,8 @@ npm run dev
 from the module root.
 
 ***
+
+### Accessing the microservice
+Access the feed microservice application on `http://localhost:6003`
+
+***
