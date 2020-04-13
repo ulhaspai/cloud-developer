@@ -37,6 +37,7 @@ inside each application to get all its projects and developer dependencies.
 Ionic uses environment files located in `/src/enviornments/enviornment.*.ts` to load configuration variables at runtime. By default `environment.ts` is used for development and `enviornment.prod.ts` is used for production. The `apiHost` variable should be set to your server url either locally or in the cloud.
 
 ### Configuring the environment variables:
+You need to configure the following environment variabled and have them sourced in the terminal you will be building and running the application
 ```bash
 export UDAGRAM_USERNAME=<database-username>
 export UDAGRAM_PASSWORD=<database-password>
