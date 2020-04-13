@@ -1,4 +1,4 @@
-# Udagram Image Backend Feed Microservice
+# Udagram Image Backend User Microservice
 
 This is the user microservice for the Udagram application. The user microservice provides the Rest APIs creating new users and user authentication.
 
@@ -24,4 +24,11 @@ inside each application to get all its projects and developer dependencies.
 1. Ensure the correct port is used in the frontend application for accessing these APIs.
 1. Ideally we want to run all microservices on the same port defined by the `PORT` variable so that the nginx server can proxy them all correctly through a docker container
 
+### Deploy independently
+
+To deploy just the user service independently run 
+```bash
+npm run dev
+```
+from the module root.
 ***
