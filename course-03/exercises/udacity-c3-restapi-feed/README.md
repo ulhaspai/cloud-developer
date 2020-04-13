@@ -28,6 +28,22 @@ inside each application to get all its projects and developer dependencies.
 1. ensure the correct port is used in the frontend application for accessing these APIs.
 1. Ideally we want to run all microservices on the same port defined by the `PORT` variable so that the nginx server can proxy them all correctly through a docker container
 
+### Configuring the environment variables:
+You need to configure the following environment variabled and have them sourced in the terminal you will be building and running the application
+```bash
+export UDAGRAM_USERNAME=<database-username>
+export UDAGRAM_PASSWORD=<database-password>
+export UDAGRAM_DATABASE=<database-name>
+export UDAGRAM_DATABASE_HOST=<AWS-RDS-database-host-path>
+export UDAGRAM_S3_BUCKET=<AWS-S3-bucket-name>
+export AWS_PROFILE=default
+export JWT_SECRET=<a-random-secret-to-be-used-for-JWT>
+export UDAGRAM_URL=<Access-Control-URL-on-the-backend>
+
+# You may use a different port, but ensure you update all the
+# necessary files in the deployment module accordingly
+export PORT=6003
+```
 
 ### Deploy independently
 
