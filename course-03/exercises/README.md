@@ -67,3 +67,8 @@ Ionic CLI can build the frontend into static HTML/CSS/JavaScript files. These fi
 ionic build
 ```
 ***
+
+### Accessing the application
+Access the application on `http://localhost:8100`
+
+***
