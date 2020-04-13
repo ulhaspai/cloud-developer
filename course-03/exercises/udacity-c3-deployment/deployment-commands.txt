@@ -1,0 +1,76 @@
+==================================================
+# DOCKER
+==================================================
+
+BUILD IMAGES:
+docker build -t ulhaspai/reverseproxy .
+docker build -t ulhaspai/udacity-c3-restapi-feed .
+docker build -t ulhaspai/udacity-c3-restapi-user .
+docker build -t ulhaspai/udacity-c3-frontend .
+
+DEPLOY CONTAINERS INDIVIDUALLY:
+docker run --rm --publish 6003:6003 -v $HOME/.aws:/root/.aws --env UDAGRAM_USERNAME=$UDAGRAM_USERNAME --env UDAGRAM_PASSWORD=$UDAGRAM_PASSWORD --env UDAGRAM_DATABASE=$UDAGRAM_DATABASE --env UDAGRAM_DATABASE_HOST=$UDAGRAM_DATABASE_HOST --env AWS_PROFILE=$AWS_PROFILE --env UDAGRAM_S3_BUCKET=$UDAGRAM_S3_BUCKET --env UDAGRAM_URL=$UDAGRAM_URL --env JWT_SECRET=$JWT_SECRET --env PORT=$PORT --name feed ulhaspai/udacity-c3-restapi-feed
+docker run --rm --publish 6003:6003 -v $HOME/.aws:/root/.aws --env UDAGRAM_USERNAME=$UDAGRAM_USERNAME --env UDAGRAM_PASSWORD=$UDAGRAM_PASSWORD --env UDAGRAM_DATABASE=$UDAGRAM_DATABASE --env UDAGRAM_DATABASE_HOST=$UDAGRAM_DATABASE_HOST --env AWS_PROFILE=$AWS_PROFILE --env UDAGRAM_S3_BUCKET=$UDAGRAM_S3_BUCKET --env UDAGRAM_URL=$UDAGRAM_URL --env JWT_SECRET=$JWT_SECRET --env PORT=$PORT --name user ulhaspai/udacity-c3-restapi-user
+docker run --rm --publish 4200:4200 --name frontend ulhaspai/udacity-c3-frontend
+
+==================================================
+# DOCKER COMPOSE
+==================================================
+BUILD ALL IMAGES TOGETHER:
+docker-compose -f docker-compose-build.yaml build --parallel
+
+DEPLOY ALL IMAGES TOGETHER:
+docker-compose up
+
+
+==================================================
+# KUBERNETES INSTALL NOTES
+==================================================
+brew install kops
+brew install kubectl
+
+export AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY as variables
+
+touch terraform.tf (or copy variable.tf file from examples folder)
+
+terraform init
+terraform plan -out "plan.txt"
+terraform apply "plan.txt"
+
+kubeone config print --full > config.yaml
+
+# update the cluster name in the config.yaml file
+# add ssh private key path to terraform.tfstate file
+
+kubeone install config.yaml --tfjson . --verbose
+
+kubeone reset config.yaml --tfjson . --verbose
+
+terraform destroy
+
+==================================================
+# KUBERNETES
+==================================================
+
+kubectl apply -f ../backend-feed-deployment.yaml
+kubectl apply -f ../backend-user-deployment.yaml
+kubectl apply -f ../frontend-deployment.yaml
+kubectl apply -f ../reverseproxy-deployment.yaml
+
+kubectl get nodes
+kubectl get deployment
+kubectl get rs
+kubectl get pod
+
+==================================================
+# ENVIRONMENT VARIABLES
+==================================================
+
+UDAGRAM_USERNAME: $UDAGRAM_USERNAME
+UDAGRAM_PASSWORD: $UDAGRAM_PASSWORD
+UDAGRAM_DATABASE: $UDAGRAM_DATABASE
+UDAGRAM_DATABASE_HOST: $UDAGRAM_DATABASE_HOST
+AWS_PROFILE: $AWS_PROFILE
+UDAGRAM_S3_BUCKET: $UDAGRAM_S3_BUCKET
+JWT_SECRET: $JWT_SECRET
+UDAGRAM_URL: "http://localhost:8100"
