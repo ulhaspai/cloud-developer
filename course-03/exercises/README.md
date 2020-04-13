@@ -36,6 +36,22 @@ inside each application to get all its projects and developer dependencies.
 ### Configure The Backend Endpoint
 Ionic uses environment files located in `/src/enviornments/enviornment.*.ts` to load configuration variables at runtime. By default `environment.ts` is used for development and `enviornment.prod.ts` is used for production. The `apiHost` variable should be set to your server url either locally or in the cloud.
 
+### Configuring the environment variables:
+```bash
+export UDAGRAM_USERNAME=<database-username>
+export UDAGRAM_PASSWORD=<database-password>
+export UDAGRAM_DATABASE=<database-name>
+export UDAGRAM_DATABASE_HOST=<AWS-RDS-database-host-path>
+export UDAGRAM_S3_BUCKET=<AWS-S3-bucket-name>
+export AWS_PROFILE=default
+export JWT_SECRET=<a-random-secret-to-be-used-for-JWT>
+export UDAGRAM_URL=<Access-Control-URL-on-the-backend>
+
+# You may use a different port, but ensure you update all the
+# necessary files in the deployment module accordingly
+export PORT=6003
+```
+
 ***
 ### Running the Development Server
 Ionic CLI provides an easy to use development server to run and autoreload the frontend. This allows you to make quick changes and see them in real time in your browser. To run the development server, open terminal and run:
