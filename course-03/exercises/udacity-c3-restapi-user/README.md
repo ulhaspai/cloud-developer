@@ -48,4 +48,10 @@ To deploy just the user service independently run
 npm run dev
 ```
 from the module root.
+
+***
+
+### Accessing the microservice
+Access the user microservice application on `http://localhost:6003`
+
 ***
