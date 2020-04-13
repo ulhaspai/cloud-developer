@@ -1,16 +1,15 @@
-# Udagram Image Filtering Microservice
+# Udagram Image Microservice
 
 Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
 
 The project is split into three parts:
-1. [The Simple Frontend](/udacity-c3-frontend)
-A basic Ionic client web application which consumes the RestAPI Backend. 
-2. [The RestAPI Feed Backend](/udacity-c3-restapi-feed), a Node-Express feed microservice.
-3. [The RestAPI User Backend](/udacity-c3-restapi-user), a Node-Express user microservice.
+1. [The Simple Frontend](./udacity-c3-frontend) A basic Ionic client web application which consumes the RestAPI Backend. 
+1. [The RestAPI Feed Backend](./udacity-c3-restapi-feed), a Node-Express feed microservice.
+1. [The RestAPI User Backend](./udacity-c3-restapi-user), a Node-Express user microservice.
 
 ## Getting Setup
 
-> _tip_: this frontend is designed to work with the RestAPI backends). It is recommended you stand up the backend first, test using Postman, and then the frontend should integrate.
+> _tip_: this frontend is designed to work with the RestAPI backends). It is recommended you deploy the backend first, test using Postman, and then the start the frontend application to access the application in a browser.
 
 ### Installing Node and NPM
 This project depends on Nodejs and Node Package Manager (NPM). Before continuing, you must download and install Node (NPM is included) from [https://nodejs.com/en/download](https://nodejs.org/en/download/).
@@ -20,22 +19,22 @@ The Ionic Command Line Interface is required to serve and build the frontend. In
 
 ### Installing project dependencies
 
-This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the root of this repository. After cloning, open your terminal and run:
+This project uses NPM to manage software dependencies. NPM Relies on the package.json file located in the root of each application's repository. After cloning, open your terminal and run:
 ```bash
 npm install
 ```
+inside each application to get all its projects and developer dependencies.
+
 >_tip_: **npm i** is shorthand for **npm install**
 
 ### Setup Backend Node Environment
-You'll need to create a new node server. Open a new terminal within the project directory and run:
-1. Initialize a new project: `npm init`
-2. Install express: `npm i express --save`
-3. Install typescript dependencies: `npm i ts-node-dev tslint typescript  @types/bluebird @types/express @types/node --save-dev`
-4. Look at the `package.json` file from the RestAPI repo and copy the `scripts` block into the auto-generated `package.json` in this project. This will allow you to use shorthand commands like `npm run dev`
-
+1. Go the `udacity-c3-restapi-feed` directory and run `npm install` and then start up the project
+1. You will need to configure the environment variable defined inside the `src/config/config.ts` file accordingly
+1. Go the `udacity-c3-restapi-user` directory and run `npm install` and then start up the project
+1. You will need to configure the environment variable defined inside the `src/config/config.ts` file accordingly
 
 ### Configure The Backend Endpoint
-Ionic uses enviornment files located in `./src/enviornments/enviornment.*.ts` to load configuration variables at runtime. By default `environment.ts` is used for development and `enviornment.prod.ts` is used for produciton. The `apiHost` variable should be set to your server url either locally or in the cloud.
+Ionic uses environment files located in `/src/enviornments/enviornment.*.ts` to load configuration variables at runtime. By default `environment.ts` is used for development and `enviornment.prod.ts` is used for production. The `apiHost` variable should be set to your server url either locally or in the cloud.
 
 ***
 ### Running the Development Server
