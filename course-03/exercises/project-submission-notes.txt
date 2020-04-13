@@ -1,0 +1,19 @@
+==================================================
+SUBMISSION NOTES:
+==================================================
+
+==================================================
+CI/CD, Github & Code Quality
+==================================================
+- Forked and merged https://github.com/scheeles/cloud-developer/tree/06-ci/course-03 -> https://github.com/ulhaspai/cloud-developer/course-03
+so that I can work on my private repo
+- Integrated Travis CI with my private github repo ulhapais/cloud-developer
+- Ran a manual Travis build to ensure build works
+
+- added necessary documentation to the project. See https://github.com/ulhaspai/cloud-developer/blob/master/course-03/exercises/README.md
+
+
+
+
+
+
