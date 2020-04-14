@@ -10,9 +10,11 @@ Github -
 - Forked and merged https://github.com/scheeles/cloud-developer/tree/06-ci/course-03 -> https://github.com/ulhaspai/cloud-developer/course-03 so that I can work on my private repo
 
 CI/CD
-- Integrated Travis CI with my private github repo ulhapais/cloud-developer
+- Integrated Travis CI with my private github repo ulhaspai/cloud-developer
 - Ran a manual Travis build to ensure build works
 - Travis CI runs a build and installs the docker compose images on each build
+- See screenshot for travis CI runing continuous builds on all branches and a screenshot for 1 successful build on master in the github repo: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/screenshots/travis
+
 
 Code Quality -
 - Added relevant README files to each project.
