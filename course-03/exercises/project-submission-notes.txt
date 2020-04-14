@@ -29,24 +29,20 @@ Container
 ==================================================
 - Each module user, feed and frontend has a Dockerfile that indicates how that module should be built
 - The docker images are published to the public docker hub :
-- You are free to download and install these images to test that they run correctly.
-- See the documentation on how to configure your environment variables to get the entire application running correctly
-- Screenshots of running docker containers added screenshots/docker folder in the github repo
-
-* TODO: To run the containers from the docker hub follow the following steps:
--
--
-
-
+- My user profile: https://hub.docker.com/u/ulhaspai
+    - Feed: https://hub.docker.com/r/ulhaspai/udacity-c3-restapi-feed
+    - User: https://hub.docker.com/r/ulhaspai/udacity-c3-restapi-user
+    - Frontend: https://hub.docker.com/r/ulhaspai/udacity-c3-frontend
+    - Reverseproxy: https://hub.docker.com/r/ulhaspai/reverseproxy
+- See the documentation on how to configure your environment to get the entire application running correctly:
+  https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-deployment/docker
 
 ==================================================
 Deployment
 ==================================================
 
 - Kubernetes cluster set up is described in the github repo: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-deployment/k8s
-
-
-
+- Screenshots of running kubernetes cluster is added to github repo: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/screenshots/k8s
 
 
 

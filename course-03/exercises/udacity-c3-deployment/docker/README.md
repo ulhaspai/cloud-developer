@@ -1,10 +1,20 @@
-# Udagram Image Filtering Microservice
+# Udagram Image Microservice
 
-Udagram is a simple cloud application developed alongside the Udacity Cloud Engineering Nanodegree. It allows users to register and log into a web client, post photos to the feed, and process photos using an image filtering microservice.
+### Set up environment variables
 
+You will need to set up the following environment variable to be able to run these docker images correctly:
 
-
-## Tasks
+```bash
+export UDAGRAM_USERNAME=<AWS-RDS-POSTGRES-DATABASE-USERNAME>
+export UDAGRAM_PASSWORD=<AWS-RDS-POSTGRES-DATABASE-PASSWORD>
+export UDAGRAM_DATABASE=<AWS-RDS-POSTGRES-DATABASE-NAME>
+export UDAGRAM_DATABASE_HOST=<AWS-RDS-HOST>
+export UDAGRAM_S3_BUCKET=<S3-BUCKET-NAME>
+export AWS_PROFILE=default
+export JWT_SECRET=<random-string>
+export UDAGRAM_URL=http://localhost:8100
+export PORT=6003
+```
 
 ### Setup Docker Environment
 You'll need to install docker https://docs.docker.com/install/. Open a new terminal within the project directory and run:
@@ -12,4 +22,3 @@ You'll need to install docker https://docs.docker.com/install/. Open a new termi
 1. Build the images: `docker-compose -f docker-compose-build.yaml build --parallel`
 2. Push the images: `docker-compose -f docker-compose-build.yaml push`
 3. Run the container: `docker-compose up`
-
