@@ -38,7 +38,7 @@ Container
     - Reverseproxy: https://hub.docker.com/r/ulhaspai/reverseproxy
 - See the documentation on how to configure your environment to get the entire application running correctly:
   https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/udacity-c3-deployment
-- Screenshots of running kubernetes cluster is added to github repo: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/screenshots/docker
+- Screenshots of running docker images is added to github repo: https://github.com/ulhaspai/cloud-developer/tree/master/course-03/exercises/screenshots/docker
 
 
 ==================================================
