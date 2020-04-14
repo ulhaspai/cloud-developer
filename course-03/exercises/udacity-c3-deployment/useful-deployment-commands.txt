@@ -11,7 +11,9 @@ docker build -t ulhaspai/udacity-c3-frontend .
 DEPLOY CONTAINERS INDIVIDUALLY:
 docker run --rm --publish 6003:6003 -v $HOME/.aws:/root/.aws --env UDAGRAM_USERNAME=$UDAGRAM_USERNAME --env UDAGRAM_PASSWORD=$UDAGRAM_PASSWORD --env UDAGRAM_DATABASE=$UDAGRAM_DATABASE --env UDAGRAM_DATABASE_HOST=$UDAGRAM_DATABASE_HOST --env AWS_PROFILE=$AWS_PROFILE --env UDAGRAM_S3_BUCKET=$UDAGRAM_S3_BUCKET --env UDAGRAM_URL=$UDAGRAM_URL --env JWT_SECRET=$JWT_SECRET --env PORT=$PORT --name feed ulhaspai/udacity-c3-restapi-feed
 docker run --rm --publish 6003:6003 -v $HOME/.aws:/root/.aws --env UDAGRAM_USERNAME=$UDAGRAM_USERNAME --env UDAGRAM_PASSWORD=$UDAGRAM_PASSWORD --env UDAGRAM_DATABASE=$UDAGRAM_DATABASE --env UDAGRAM_DATABASE_HOST=$UDAGRAM_DATABASE_HOST --env AWS_PROFILE=$AWS_PROFILE --env UDAGRAM_S3_BUCKET=$UDAGRAM_S3_BUCKET --env UDAGRAM_URL=$UDAGRAM_URL --env JWT_SECRET=$JWT_SECRET --env PORT=$PORT --name user ulhaspai/udacity-c3-restapi-user
-docker run --rm --publish 4200:4200 --name frontend ulhaspai/udacity-c3-frontend
+docker run --rm --publish 8100:8100 --name frontend ulhaspai/udacity-c3-frontend
+
+
 
 ==================================================
 # DOCKER COMPOSE
@@ -21,6 +23,8 @@ docker-compose -f docker-compose-build.yaml build --parallel
 
 DEPLOY ALL IMAGES TOGETHER:
 docker-compose up
+
+docker push yourdockerhubname/udacity-restapi-feed
 
 
 ==================================================
@@ -44,6 +48,13 @@ kubeone config print --full > config.yaml
 
 kubeone install config.yaml --tfjson . --verbose
 
+alias k="kubectl"
+export KUBECONFIG=$PWD/udacity-c3-microservices-kubeconfig
+
+k exec -it backend-feed-6c5f97bf67-g8pdn -- /bin/bash
+
+---
+
 kubeone reset config.yaml --tfjson . --verbose
 
 terraform destroy
@@ -53,9 +64,23 @@ terraform destroy
 ==================================================
 
 kubectl apply -f ../backend-feed-deployment.yaml
+kubectl apply -f ../backend-feed-service.yaml
+
 kubectl apply -f ../backend-user-deployment.yaml
+kubectl apply -f ../backend-user-service.yaml
+
 kubectl apply -f ../frontend-deployment.yaml
+kubectl apply -f ../frontend-service.yaml
+
 kubectl apply -f ../reverseproxy-deployment.yaml
+kubectl apply -f ../reverseproxy-service.yaml
+
+kubectl apply -f ../aws-secret.yaml
+kubectl apply -f ../env-configmap.yaml
+kubectl apply -f ../env-secret.yaml
+
+kubectl port-forward service/frontend 8100:80
+kubectl port-forward service/reverseproxy 6003:8080
 
 kubectl get nodes
 kubectl get deployment

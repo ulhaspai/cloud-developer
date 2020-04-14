@@ -1,0 +1,7 @@
+apiVersion: kubeone.io/v1alpha1
+kind: KubeOneCluster
+name: udacity-c3-microservices
+versions:
+  kubernetes: 1.16.1
+cloudProvider:
+  name: aws
