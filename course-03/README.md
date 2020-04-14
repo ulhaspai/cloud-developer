@@ -1,2 +1,2 @@
-adding course 03 to the private repo
-
+### Course 03
+Contains the exercises for the course03 monolith to microservices
