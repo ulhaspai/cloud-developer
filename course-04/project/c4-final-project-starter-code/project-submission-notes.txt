@@ -1,0 +1,13 @@
+Functionality
+
+Code Base
+
+Best Practices
+
+Architecture
+- Data is stored in a DynamoDB table "todos" which has a composite key (userId, todoId), where userId is the partition key and todoId is the sort key
+- A partition key of "userId" ensures all todos for a users lie in the same partition
+- A sort key of "todoId" ensures we can access a single to-do item for the purposes of update/delete
+- The getTodos API fetches all to-dos for a user using the userId of the user.
+- The userId for a user is taken from the JWT payload (sub field) automatically from the provided JWT
+
