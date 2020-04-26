@@ -2,6 +2,7 @@ import { TodoItem } from "../models/TodoItem";
 import { ITodoDataAccess } from "../dataLayer/ITodoDataAccess";
 import { TodoDocumentClient } from "../dataLayer/TodoDocumentClient";
 import { S3Client } from "../dataLayer/S3Client";
+import { UpdateTodoRequest } from "../requests/UpdateTodoRequest";
 
 const todoDataAccess: ITodoDataAccess = new TodoDocumentClient()
 const s3Client: S3Client = new S3Client()
@@ -56,8 +57,33 @@ export class TodoManager {
         return todos
     }
 
-    static updateTodoItem() {
+    static async getTodoItem(todoId: string, userId: string): Promise<TodoItem> {
+        const todo = await todoDataAccess.getTodo(todoId, userId)
+        todo.attachmentUrl = s3Client.getSignedGetUrl(todo.todoId)
+        return todo
+    }
 
+    static async updateTodoItem(todoId: string, userId: string, updateTodoRequest: UpdateTodoRequest): Promise<TodoItem> {
+        // verify the todoId belongs to the userId
+        await TodoManager.verifyTodoBelongsToUser(todoId, userId)
+
+        // get the current value
+        const currentValue = await TodoManager.getTodoItem(todoId, userId)
+
+        // create the to-do object to be updated
+        const update: TodoItem  = {
+            userId,
+            todoId,
+            createdAt: currentValue.createdAt,
+            attachmentUrl: currentValue.attachmentUrl,
+            ...updateTodoRequest
+        }
+
+        // update the to-do item
+        const updatedTodoItem = await todoDataAccess.updateTodo(update)
+
+        // return the update to-do item
+        return Promise.resolve(updatedTodoItem)
     }
 
     static async deleteTodoItem(todoId: string, userId: string): Promise<string> {

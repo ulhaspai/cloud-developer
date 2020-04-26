@@ -16,11 +16,27 @@ export interface ITodoDataAccess {
     getTodos(userId: string): Promise<Array<TodoItem>>
 
     /**
+     * returns the to-do items for the input userId and todoId
+     *
+     * @param todoId the to-do id of the to-do item
+     * @param userId the user id of the user
+     * @return all the to-do items for the user
+     */
+    getTodo(todoId: string, userId: string): Promise<TodoItem>
+
+    /**
      * creates the input to-do item
      *
      * @param todoItem the to-do item to be created
      */
     createTodo(todoItem: TodoItem): Promise<TodoItem>
+
+    /**
+     * updates the input to-do item
+     *
+     * @param todoItem the to-do item to be updated
+     */
+    updateTodo(todoItem: TodoItem): Promise<TodoItem>
 
     /**
      * deletes the to-do item for the input todoId and userId

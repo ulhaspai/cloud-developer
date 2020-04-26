@@ -23,9 +23,6 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     const todoId = UUID.v4()
     logger.info("createTodo: todoId = ", todoId)
 
-    // generate the upload url for an image
-    // const url = getUploadUrl(imageId)
-
     // create the to-do object to be saved to the data store
     let newTodoItem: TodoItem = {
         userId: userId,
