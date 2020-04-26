@@ -3,11 +3,14 @@ Functionality
 Code Base
 
 Best Practices
-
+- All resources are defined in the serverless.yml file
+   -
 Architecture
-- Data is stored in a DynamoDB table "todos" which has a composite key (userId, todoId), where userId is the partition key and todoId is the sort key
-- A partition key of "userId" ensures all todos for a users lie in the same partition
-- A sort key of "todoId" ensures we can access a single to-do item for the purposes of update/delete
-- The getTodos API fetches all to-dos for a user using the userId of the user.
+- Data is stored in a DynamoDB table "todos" which has a composite key (todoId, userId), where todoId is the partition key and userId is the sort key
+- A Global Index is maintained on this table with the userId as the partition key.
+- A partition key of "userId" ensures all todos for a users lie in the same partition in this index
+- We use this index to returns all todos for a user
+- The partition key of "todoId" on the todos table, ensures we can update and delete a to-do item. The global index propagates this change the userId index
+- The getTodos API fetches all to-dos for a user using the userId of the user using the index
 - The userId for a user is taken from the JWT payload (sub field) automatically from the provided JWT
 
