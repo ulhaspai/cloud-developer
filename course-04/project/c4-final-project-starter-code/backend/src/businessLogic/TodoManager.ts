@@ -8,7 +8,7 @@ import { createLogger } from "../utils/logger";
 const todoDataAccess: ITodoDataAccess = new TodoDocumentClient()
 const s3Client: S3Client = new S3Client()
 
-const logger = createLogger('updateTodo')
+const logger = createLogger('TodoManager')
 
 /**
  * TodoManager provides all the business logic for the todos application

@@ -1,16 +1,18 @@
-import { DocumentClient } from "aws-sdk/lib/dynamodb/document_client"
 import * as AWS from "aws-sdk"
 import { TodoItem } from "../models/TodoItem"
 import { ITodoDataAccess } from "./ITodoDataAccess";
 import { createLogger } from "../utils/logger";
 
-const logger = createLogger('createTodo')
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(require('aws-sdk'))
+
+const logger = createLogger('TodoDocumentClient')
 
 /**
  * TodoDocumentClient is an AWS implementation for the {@link ITodoDataAccess}
  */
 export class TodoDocumentClient implements ITodoDataAccess {
-    private readonly documentClient: DocumentClient
+    private readonly documentClient: AWS.DynamoDB.DocumentClient
     private static readonly TODOS_TABLE: string = process.env.TODOS_TABLE
     private static readonly USER_ID_INDEX: string = process.env.USER_ID_INDEX_NAME
 
@@ -18,16 +20,16 @@ export class TodoDocumentClient implements ITodoDataAccess {
         this.documentClient = TodoDocumentClient.getDynamoDBClient()
     }
 
-    private static getDynamoDBClient(): DocumentClient {
+    private static getDynamoDBClient(): AWS.DynamoDB.DocumentClient {
         if (process.env.IS_OFFLINE) {
             logger.info('Creating a local DynamoDB instance')
-            return new AWS.DynamoDB.DocumentClient({
+            return new XAWS.DynamoDB.DocumentClient({
                 region: 'localhost',
                 endpoint: 'http://localhost:8000'
             })
         }
 
-        return new AWS.DynamoDB.DocumentClient()
+        return new XAWS.DynamoDB.DocumentClient()
     }
 
     async getTodos(userId: string): Promise<Array<TodoItem>> {
@@ -97,7 +99,7 @@ export class TodoDocumentClient implements ITodoDataAccess {
         }
     }
 
-    private static convertDbItemToTodoItem(dbItem:  DocumentClient.AttributeMap): TodoItem {
+    private static convertDbItemToTodoItem(dbItem: AWS.DynamoDB.DocumentClient.AttributeMap): TodoItem {
         return {
             todoId: dbItem.todoId,
             userId: dbItem.userId,
