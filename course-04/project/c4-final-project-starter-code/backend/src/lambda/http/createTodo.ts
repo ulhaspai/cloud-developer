@@ -5,20 +5,23 @@ import * as UUID from 'uuid'
 import { LambdaUtils } from "../LambdaUtils";
 import { TodoItem } from "../../models/TodoItem";
 import { TodoManager } from "../../businessLogic/TodoManager";
+import { createLogger } from "../../utils/logger";
+
+const logger = createLogger('auth')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    console.log("createTodo: Started")
+    logger.info("createTodo: Started")
 
     // grab the user id from the JWT payload
     const userId: string = LambdaUtils.getUserId(event)
-    console.log("createTodo: userId = ", userId)
+    logger.info("createTodo: userId = ", userId)
 
     // grab the request body
     const newTodoRequest: CreateTodoRequest = JSON.parse(event.body)
 
     // generate a new todoId
     const todoId = UUID.v4()
-    console.log("createTodo: todoId = ", todoId)
+    logger.info("createTodo: todoId = ", todoId)
 
     // generate the upload url for an image
     // const url = getUploadUrl(imageId)
@@ -30,9 +33,9 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
         createdAt: new Date().toISOString(),
         name: newTodoRequest.name,
         dueDate: newTodoRequest.dueDate,
-        done: false,
+        done: false
     }
-    console.log("createTodo: newTodoItem = ", newTodoItem)
+    logger.info("createTodo: newTodoItem = ", newTodoItem)
 
     // save item using TodoManager
     newTodoItem = await TodoManager.createTodoItem(newTodoItem)

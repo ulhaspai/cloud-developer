@@ -3,6 +3,9 @@ import * as AWS from "aws-sdk"
 import { TodoItem } from "../models/TodoItem"
 import { ITodoDataAccess } from "./ITodoDataAccess";
 
+/**
+ * TodoDocumentClient is an AWS implementation for the {@link ITodoDataAccess}
+ */
 export class TodoDocumentClient implements ITodoDataAccess {
     private readonly documentClient: DocumentClient
     private static readonly TODOS_TABLE: string = process.env.TODOS_TABLE

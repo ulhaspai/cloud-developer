@@ -1,6 +1,9 @@
 import { decode } from "jsonwebtoken"
 import { Jwt } from "./Jwt"
 
+/**
+ * JWT client class providing functionalities for a user's JWT object
+ */
 export class JwtClient {
 
     /**
