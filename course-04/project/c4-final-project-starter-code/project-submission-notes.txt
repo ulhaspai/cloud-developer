@@ -1,3 +1,4 @@
+
 Git
 - All source code submitted to github at : https://github.com/ulhaspai/cloud-developer/tree/master/course-04/project/c4-final-project-starter-code
 - The client can be run locally at : http://localhost:6003
@@ -32,6 +33,7 @@ Best Practices
 - Distributed tracing has been added to the application. See S3Client.ts, TodoDocumentClient.ts and serverless.yml file for the added configuration
 - Screenshots of working distributed tracing with application service map and metrics added to the screenshots folder in github
 
+
 Architecture
 - Data is stored in a DynamoDB table "todos" which has a composite key (todoId, userId), where todoId is the partition key and userId is the sort key
 - A Global Index is maintained on this table with the userId as the partition key.
@@ -41,4 +43,5 @@ Architecture
 - The getTodos API fetches all to-dos for a user using the userId of the user using the index
 - The userId for a user is taken from the JWT payload ("sub" field) automatically from the provided JWT
 - "scan" operation is not used anywhere in the application
+
 

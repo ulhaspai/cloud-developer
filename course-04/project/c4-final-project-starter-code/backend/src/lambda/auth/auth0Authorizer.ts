@@ -5,9 +5,7 @@ import { JwkClient } from "../../auth/JwkClient";
 
 const logger = createLogger('auth')
 
-export const handler = async (
-    event: CustomAuthorizerEvent
-): Promise<CustomAuthorizerResult> => {
+export const handler = async (event: CustomAuthorizerEvent): Promise<CustomAuthorizerResult> => {
     logger.info('Authorizing a user for token = ', event.authorizationToken)
     try {
         const jwtToken = await JwkClient.verifyToken(event.authorizationToken)

@@ -12,11 +12,11 @@ plugins:
 
 custom:
 
-  # configuration for running the serverless application offline
+  # configuration for running the an the serverline application offline
   serverless-offline:
     port: 3003
 
-  # configuration for running a local dynamodb emulator
+  # configuration for running a dynamodb emulator
   dynamodb:
     start:
       port: 8000
