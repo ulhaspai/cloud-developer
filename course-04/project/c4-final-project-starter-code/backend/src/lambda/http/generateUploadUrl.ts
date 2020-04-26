@@ -5,7 +5,7 @@ import { LambdaUtils } from "../LambdaUtils";
 import { TodoManager } from "../../businessLogic/TodoManager";
 import { createLogger } from "../../utils/logger";
 
-const logger = createLogger('auth')
+const logger = createLogger('generateUploadUrl')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
     logger.info("deleteTodo: Started")

@@ -17,11 +17,11 @@ export class S3Client implements ITodoFileAccess {
         })
     }
 
-    public deleteAttachment(todoId: string) {
-        this.s3.deleteObject({
+    public async deleteAttachment(todoId: string) {
+        await this.s3.deleteObject({
             Bucket: S3Client.BUCKET_NAME,
             Key: todoId
-        })
+        }).promise()
     }
 
     public getSignedPutUrl(todoId: string): string {

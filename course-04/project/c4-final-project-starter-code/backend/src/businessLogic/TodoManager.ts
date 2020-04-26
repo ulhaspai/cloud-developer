@@ -68,7 +68,7 @@ export class TodoManager {
         const deletedTodoId = await todoDataAccess.deleteTodo(todoId, userId)
 
         // delete any attachments if exists
-        s3Client.deleteAttachment(todoId)
+        await s3Client.deleteAttachment(todoId)
 
         // return the deleted todoId
         return Promise.resolve(deletedTodoId)
