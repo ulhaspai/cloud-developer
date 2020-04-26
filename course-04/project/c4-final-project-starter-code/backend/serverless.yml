@@ -4,6 +4,37 @@ service:
 plugins:
   - serverless-webpack
   - serverless-iam-roles-per-function
+  - serverless-aws-documentation
+  - serverless-dynamodb-local
+  - serverless-offline
+#  - serverless-reqvalidator-plugin
+#  - serverless-plugin-canary-deployments
+
+custom:
+
+  # configuration for running the an the serverline application offline
+  serverless-offline:
+    port: 3003
+
+  # configuration for running a dynamodb emulator
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    stages:
+      - dev
+
+  documentation:
+    api:
+      info:
+        version: v1.0.0
+        title: TODO List Application
+        description: Serverless application for TODO lists
+    models:
+      - name: TodoItem
+        contentType: application/json
+        schema: ${file(models/create-todo-request.json)}
 
 provider:
   name: aws
@@ -13,9 +44,8 @@ provider:
   region: ${opt:region, 'us-east-1'}
 
   environment:
-    TODOS_TABLE: Todos-${self:provider.stage}
-#    TODOS_INDEX_NAME: TodosTodoIdIndex
-
+    TODOS_TABLE: Todos-${self:provider.stage}-2
+    USER_ID_INDEX_NAME: UserIdIndex
 
   iamRoleStatements:
     - Effect: Allow
@@ -23,19 +53,15 @@ provider:
         - codedeploy:*
       Resource:
         - '*'
-    - Effect: Allow
-      Action:
-        - dynamodb:Scan
-        - dynamodb:PutItem
-        - dynamodb:GetItem
-        - dynamodb:Query
-      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+
 
 functions:
 
+  # Authorizer lambda function
   Auth:
     handler: src/lambda/auth/auth0Authorizer.handler
 
+  # Get To-dos lambda function
   GetTodos:
     handler: src/lambda/http/getTodos.handler
     events:
@@ -44,16 +70,51 @@ functions:
           path: todos
           cors: true
           authorizer: Auth
+          documentation:
+            summary: Get todo items
+            description: Gets a list of todo items for the current logged in user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:Query
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.USER_ID_INDEX_NAME}
 
-#  # TODO: Configure this function
-#  CreateTodos:
-#  CreateTodo:
-#    handler: src/lambda/http/createTodo.handler
-#    events:
-#      - http:
-#          method: post
-#          path: todos
-#
+  # Create To-do lambda function
+  CreateTodo:
+    handler: src/lambda/http/createTodo.handler
+    events:
+      - http:
+          method: post
+          path: todos
+          cors: true
+          authorizer: Auth
+          documentation:
+            summary: Create a todo item
+            description: Creates an input todo item for the user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+
+  # Delete To-do lambda function
+  DeleteTodo:
+    handler: src/lambda/http/deleteTodo.handler
+    events:
+      - http:
+          method: delete
+          path: todos/{todoId}
+          authorizer: Auth
+          cors: true
+          documentation:
+            summary: Delete a todo item
+            description: Deletes an input todo item for the input todoId and the user
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:DeleteItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}
+
 #  # TODO: Configure this function
 #  UpdateTodo:
 #    handler: src/lambda/http/updateTodo.handler
@@ -62,14 +123,7 @@ functions:
 #          method: patch
 #          path: todos/{todoId}
 #
-#  # TODO: Configure this function
-#  DeleteTodo:
-#    handler: src/lambda/http/deleteTodo.handler
-#    events:
-#      - http:
-#          method: delete
-#          path: todos/{todoId}
-#
+
 #  # TODO: Configure this function
 #  GenerateUploadUrl:
 #    handler: src/lambda/http/generateUploadUrl.handler
@@ -84,23 +138,23 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: userId
-            AttributeType: S
           - AttributeName: todoId
+            AttributeType: S
+          - AttributeName: userId
             AttributeType: S
         KeySchema:
-          - AttributeName: userId
-            KeyType: HASH
           - AttributeName: todoId
+            KeyType: HASH
+          - AttributeName: userId
             KeyType: RANGE
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODOS_TABLE}
-#        LocalSecondaryIndexes:
-#          - IndexName: ${self:provider.environment.TODOS_INDEX_NAME}
-#            KeySchema:
-#              - AttributeName: partitionKey
-#                KeyType: HASH
-#              - AttributeName: indexKey
-#                KeyType: RANGE
-#            Projection:
-#              ProjectionType: ALL # What attributes will be copied to an index
+        GlobalSecondaryIndexes:
+          - IndexName: ${self:provider.environment.USER_ID_INDEX_NAME}
+            KeySchema:
+              - AttributeName: userId
+                KeyType: HASH
+              - AttributeName: todoId
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
