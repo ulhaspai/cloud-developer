@@ -1,3 +1,6 @@
+/**
+ * JSON Web Key. This is used to validate a user using their certificates and RS256 algorithm
+ */
 export interface Jwk {
     alg: string;
     kty: string;
@@ -9,6 +12,10 @@ export interface Jwk {
     x5c: Array<string>;
 }
 
+/**
+ * A signing key, this object is produced using a Jwk
+ * The kid param is used to match and select a publicKey for the input user's JWT
+ */
 export interface SigningKey {
     kid: string
     nbf: string

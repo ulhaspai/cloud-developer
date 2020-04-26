@@ -1,6 +1,12 @@
 import { TodoItem } from "../models/TodoItem";
 
+/**
+ * ITodoDataAccess interface defines all the behaviors a to-do data access class should provide
+ * This is useful if the data store used for the todos is changed in the future, or if we move
+ * to another cloud providers
+ */
 export interface ITodoDataAccess {
+
     /**
      * returns all the to-do items for the input userId
      *

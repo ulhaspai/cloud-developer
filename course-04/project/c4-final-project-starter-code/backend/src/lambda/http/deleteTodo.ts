@@ -3,18 +3,21 @@ import 'source-map-support/register'
 import { APIGatewayProxyEvent, APIGatewayProxyResult, APIGatewayProxyHandler } from 'aws-lambda'
 import { LambdaUtils } from "../LambdaUtils";
 import { TodoManager } from "../../businessLogic/TodoManager";
+import { createLogger } from "../../utils/logger";
+
+const logger = createLogger('auth')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  console.log("deleteTodo: Started")
+  logger.info("deleteTodo: Started")
 
   // grab the user id from the JWT payload
   const userId: string = LambdaUtils.getUserId(event)
-  console.log("deleteTodo: userId = ", userId)
+  logger.info("deleteTodo: userId = ", userId)
 
   // grab the todoId to be deleted
   const todoId = event.pathParameters.todoId
 
-  // TODO: Remove a TODO item by id
+  // remove the to-do item for this user
   await TodoManager.deleteTodoItem(todoId, userId)
 
   return {
@@ -26,3 +29,5 @@ export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEven
     body: null
   }
 }
+
+
