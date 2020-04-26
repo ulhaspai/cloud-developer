@@ -1,5 +1,8 @@
-import * as AWS from "aws-sdk";
+import * as AWS from "aws-sdk"
 import { ITodoFileAccess } from "./ITodoFileAccess";
+
+const AWSXRay = require('aws-xray-sdk')
+const XAWS = AWSXRay.captureAWS(require('aws-sdk'))
 
 /**
  * S3Client is an AWS implementation for the {@link ITodoFileAccess}
@@ -12,7 +15,7 @@ export class S3Client implements ITodoFileAccess {
     private s3: AWS.S3
 
     constructor() {
-        this.s3 = new AWS.S3({
+        this.s3 = new XAWS.S3({
             signatureVersion: 'v4'
         })
     }

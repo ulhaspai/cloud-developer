@@ -32,9 +32,12 @@ custom:
         title: TODO List Application
         description: Serverless application for TODO lists
     models:
-      - name: TodoItem
+      - name: CreateTodoRequest
         contentType: application/json
         schema: ${file(models/create-todo-request.json)}
+      - name: UpdateTodoRequest
+        contentType: application/json
+        schema: ${file(models/update-todo-request.json)}
 
 provider:
   name: aws
@@ -43,6 +46,10 @@ provider:
   stage: ${opt:stage, 'dev'}
   region: ${opt:region, 'us-east-1'}
 
+  tracing:
+    lambda: true
+    apiGateway: true
+
   environment:
     TODOS_TABLE: todos-${self:provider.stage}
     USER_ID_INDEX_NAME: UserIdIndex
@@ -50,6 +57,7 @@ provider:
     ATTACHMENT_URL_EXPIRATION: 300
 
   iamRoleStatements:
+    # enabling codeploy across everything
     - Effect: Allow
       Action:
         - codedeploy:*
@@ -84,6 +92,16 @@ functions:
         Action:
           - s3:GetObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+      # enabling tracing
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+          - xray:GetSamplingRules
+          - xray:GetSamplingTargets
+          - xray:GetSamplingStatisticSummaries
+        Resource:
+          - '*'
 
   # Create To-do lambda function
   CreateTodo:
@@ -96,7 +114,11 @@ functions:
           authorizer: Auth
           documentation:
             summary: Create a todo item
-            description: Creates an input todo item for the user
+            description: Creates an input todo item for the current logged in user
+          # request validator for the create to-do request
+          request:
+            schema:
+              application/json: ${file(models/create-todo-request.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -106,8 +128,18 @@ functions:
         Action:
           - s3:GetObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+      # enabling tracing
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+          - xray:GetSamplingRules
+          - xray:GetSamplingTargets
+          - xray:GetSamplingStatisticSummaries
+        Resource:
+          - '*'
 
-  # Updates the to-do item
+  # Update to-do lambda function
   UpdateTodo:
     handler: src/lambda/http/updateTodo.handler
     events:
@@ -118,7 +150,11 @@ functions:
           authorizer: Auth
           documentation:
             summary: Update a todo item
-            description: Updated a todo item for the input values for the user
+            description: Updates a todo item for the input values for the current logged in user
+          # request validator for the update to-do request
+          request:
+            schema:
+              application/json: ${file(models/update-todo-request.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -130,9 +166,18 @@ functions:
         Action:
           - dynamodb:Query
         Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}/index/${self:provider.environment.USER_ID_INDEX_NAME}
+      # enabling tracing
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+          - xray:GetSamplingRules
+          - xray:GetSamplingTargets
+          - xray:GetSamplingStatisticSummaries
+        Resource:
+          - '*'
 
-
-  # Generates the upload url for a to-do item
+  # Generates upload url for a to-do lambda function
   GenerateUploadUrl:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
@@ -142,7 +187,7 @@ functions:
           cors: true
           documentation:
             summary: Generate upload url
-            description: Generates a upload url for the input todoId and the user
+            description: Generates an upload url for the input todoId and the current logged in user
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -152,9 +197,18 @@ functions:
         Action:
           - s3:PutObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+      # enabling tracing
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+          - xray:GetSamplingRules
+          - xray:GetSamplingTargets
+          - xray:GetSamplingStatisticSummaries
+        Resource:
+          - '*'
 
-
-  # Delete To-do lambda function
+  # Delete to-do lambda function
   DeleteTodo:
     handler: src/lambda/http/deleteTodo.handler
     events:
@@ -165,7 +219,7 @@ functions:
           cors: true
           documentation:
             summary: Delete a todo item
-            description: Deletes an input todo item for the input todoId and the user
+            description: Deletes an input todo item for the input todoId and the current logged in user
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -179,9 +233,21 @@ functions:
         Action:
           - s3:DeleteObject
         Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+      # enabling tracing
+      - Effect: Allow
+        Action:
+          - xray:PutTraceSegments
+          - xray:PutTelemetryRecords
+          - xray:GetSamplingRules
+          - xray:GetSamplingTargets
+          - xray:GetSamplingStatisticSummaries
+        Resource:
+          - '*'
 
 resources:
   Resources:
+
+    # Dynamodb table for storing to-do items
     TodosTable:
       Type: AWS::DynamoDB::Table
       Properties:
@@ -207,6 +273,7 @@ resources:
             Projection:
               ProjectionType: ALL
 
+    # S3 bucket for storing attachments
     AttachmentsBucket:
       Type: AWS::S3::Bucket
       Properties:
@@ -225,6 +292,7 @@ resources:
                 - HEAD
               MaxAge: 3000
 
+    # Bucket policy for the s3 bucket (AttachmentBucket) using References
     BucketPolicy:
       Type: AWS::S3::BucketPolicy
       Properties:

@@ -9,18 +9,19 @@ import { TodoManager } from "../../businessLogic/TodoManager";
 const logger = createLogger('updateTodo')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("updateTodo: Started")
+    logger.info("Started")
 
     // grab the user id from the JWT payload
     const userId: string = LambdaUtils.getUserId(event)
-    logger.info("updateTodo: userId = ", userId)
+    logger.info("userId = ", userId)
 
     // grab the todoId to be deleted
     const todoId = event.pathParameters.todoId
-    logger.info("updateTodo: todoId = ", todoId)
+    logger.info("todoId = ", todoId)
 
     // grab the request body
     const updateTodoRequest: UpdateTodoRequest = JSON.parse(event.body)
+    logger.info("update request = ", updateTodoRequest)
 
     // update the to-do item for this user
     await TodoManager.updateTodoItem(todoId, userId, updateTodoRequest)

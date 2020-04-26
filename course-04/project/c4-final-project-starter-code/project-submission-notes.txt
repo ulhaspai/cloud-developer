@@ -1,10 +1,39 @@
+
+Git
+- All source code submitted to github at : https://github.com/ulhaspai/cloud-developer/tree/master/course-04/project/c4-final-project-starter-code
+- The client can be run locally at : http://localhost:6003
+- The apiKey and the auth0 config are all configured in /client/src/config.ts file
+
 Functionality
+- Users can create, update and delete a todos through in the UI
+- CORS headers are set appropriately to allow the client to be able to access the APIs configured in the API Gateway
+- Users can click on a to-do to attach an image to it. This uploads a file to the S3 bucket defined in the serverless.yml file
+- The attachments are saved on the todoId
+- Auth0 integration has been done so that users can only perform actions on the to-do items once logged in
+- Users can only perform actions on the todos that they have created
 
 Code Base
+- Code is split into multiple layers that deal to deal with different things
+- All lambda functions are defined in backend/src/lambda. The lambda function use the business layer for completing their actions
+- The business layer is defined in backend/src/businessLogic/TodoManager.ts
+- TodoManager.ts provides all required functionality for managing the to-do application
+- The data layer that actually deals with the I/O is defined in backend/src/dataLayer
+- ITodoDataAccess.ts provides an interface that tells how to create a data layer for the data store for the todos
+- TodoDocumentClient.ts is the AWS DynamoDb implementation of ITodoDataAccess.ts
+- ITodoFileAccess.ts provides an interface that tells how to create a data layer for the file store for the attachment
+- S3Client.ts is the AWS S3 implementation of ITodoFileAccess.ts
+- I don't use callbacks anywhere, and all logic is implemented using the asyn/await in the lamdba function, business layer and the data layer
 
 Best Practices
-- All resources are defined in the serverless.yml file
-   -
+- serverless.yml file defines all the required resources for dynamodb, s3 buckets, bucket policy
+- The iam roles for each lambda function is defined by the iamRoleStatements for the each function definition using serverless-iam-roles-per-function
+- certain role definitions that are common across everything are added under the provider section under serverless.yml file
+- Request body validation is implemented using the native support in serverless framework. see commented code in serverless.yml file
+- Log statements are added in all files using the winston library
+- Distributed tracing has been added to the application. See S3Client.ts, TodoDocumentClient.ts and serverless.yml file for the added configuration
+- Screenshots of working distributed tracing with application service map and metrics added to the screenshots folder in github
+
+
 Architecture
 - Data is stored in a DynamoDB table "todos" which has a composite key (todoId, userId), where todoId is the partition key and userId is the sort key
 - A Global Index is maintained on this table with the userId as the partition key.
@@ -12,5 +41,7 @@ Architecture
 - We use this index to returns all todos for a user
 - The partition key of "todoId" on the todos table, ensures we can update and delete a to-do item. The global index propagates this change the userId index
 - The getTodos API fetches all to-dos for a user using the userId of the user using the index
-- The userId for a user is taken from the JWT payload (sub field) automatically from the provided JWT
+- The userId for a user is taken from the JWT payload ("sub" field) automatically from the provided JWT
+- "scan" operation is not used anywhere in the application
+
 

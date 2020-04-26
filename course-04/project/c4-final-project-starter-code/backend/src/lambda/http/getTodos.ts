@@ -8,11 +8,11 @@ import { createLogger } from "../../utils/logger";
 const logger = createLogger('getTodos')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("getTodos: Started");
+    logger.info("Started");
 
     // grab the user id from the JWT payload
     const userId: string = LambdaUtils.getUserId(event)
-    logger.info("getTodos: userId = ", userId);
+    logger.info("userId = ", userId);
 
     // get items using TodoManager
     const items = await TodoManager.getTodoItems(userId);

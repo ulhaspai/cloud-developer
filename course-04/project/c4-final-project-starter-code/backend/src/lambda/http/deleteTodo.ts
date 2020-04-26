@@ -8,11 +8,11 @@ import { createLogger } from "../../utils/logger";
 const logger = createLogger('deleteTodo')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  logger.info("deleteTodo: Started")
+  logger.info("Started")
 
   // grab the user id from the JWT payload
   const userId: string = LambdaUtils.getUserId(event)
-  logger.info("deleteTodo: userId = ", userId)
+  logger.info("userId = ", userId)
 
   // grab the todoId to be deleted
   const todoId = event.pathParameters.todoId
