@@ -8,14 +8,16 @@ import { createLogger } from "../../utils/logger";
 const logger = createLogger('generateUploadUrl')
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-    logger.info("deleteTodo: Started")
+    logger.info("Started")
 
     // grab the user id from the JWT payload
     const userId: string = LambdaUtils.getUserId(event)
-    logger.info("deleteTodo: userId = ", userId)
+    logger.info("userId = ", userId)
+
 
     // grab the todoId to be deleted
     const todoId = event.pathParameters.todoId
+    logger.info("todoId = ", todoId)
 
     // get the upload url for this todoId and userId
     const uploadUrl = await TodoManager.getAttachmentUploadUrl(todoId, userId)

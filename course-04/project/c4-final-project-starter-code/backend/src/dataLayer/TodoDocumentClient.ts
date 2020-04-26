@@ -95,7 +95,6 @@ export class TodoDocumentClient implements ITodoDataAccess {
         } catch (err) {
             logger.info("Error deleting todo item", err)
         }
-        throw new Error("Method not implemented.");
     }
 
     private static convertDbItemToTodoItem(dbItem:  DocumentClient.AttributeMap): TodoItem {

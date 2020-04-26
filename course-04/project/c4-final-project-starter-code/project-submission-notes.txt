@@ -23,16 +23,18 @@ Code Base
 - ITodoFileAccess.ts provides an interface that tells how to create a data layer for the file store for the attachment
 - S3Client.ts is the AWS S3 implementation of ITodoFileAccess.ts
 
-- I don't callbacks anyways, and all logic is implemented using the asyn/await in the lamdba function, business layer and the data layer
+- I don't use callbacks anywhere, and all logic is implemented using the asyn/await in the lamdba function, business layer and the data layer
 
 
 Best Practices
 - serverless.yml file defines all the required resources for dynamodb, s3 buckets, bucket policy
 - The iam roles for each lambda function is defined by the iamRoleStatements for the each function definition using serverless-iam-roles-per-function
+- Request body validation is implemented using the native support in serverless framework. see commented code in serverless.yml file
+- Log statements are added in all files using the winston library
+
 - [TODO] distributed tracing
-- [TODO] log statements
 - [TODO] application level metrics
-- [TODO] request validators
+
 
 
 Architecture

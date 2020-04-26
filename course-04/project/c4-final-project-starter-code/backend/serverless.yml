@@ -100,6 +100,10 @@ functions:
           documentation:
             summary: Create a todo item
             description: Creates an input todo item for the current logged in user
+          # request validator for the create to-do request
+          request:
+            schema:
+              application/json: ${file(models/create-todo-request.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
@@ -122,6 +126,10 @@ functions:
           documentation:
             summary: Update a todo item
             description: Updates a todo item for the input values for the current logged in user
+          # request validator for the update to-do request
+          request:
+            schema:
+              application/json: ${file(models/update-todo-request.json)}
     iamRoleStatements:
       - Effect: Allow
         Action:
